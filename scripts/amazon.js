@@ -1,4 +1,4 @@
-import { cart } from '../data/cart.js'
+import { cart, handleAddToCart } from '../data/cart.js'
 import { products } from '../data/products.js';
 
 const productsContainer = document.querySelector('.js-products-grid')
@@ -55,25 +55,12 @@ const addToCart = document.querySelectorAll('.js-add-to-cart')
 const quantity = document.querySelector('.js-quantity')
 let timeoutId;
 
-addToCart.forEach((addBtn) => {
-    addBtn.addEventListener('click', () => {
-        clearTimeout(timeoutId)
-        const { productId } = addBtn.dataset;
-        const select = addBtn.closest('.product-container').querySelector('.js-select-quantity');
-        const addedCart = addBtn.closest('.product-container').querySelector('.added-to-cart')
-        const selectedQty = Number(select.value);
+
+
+//Function to update quantity
+const updateQuantity = (addedCart) => {   
         let cartQuantity = 0;
 
-        const existingProduct = cart.find(item => item.productId === productId)
-
-        if(existingProduct){
-            existingProduct.quantity += selectedQty
-        }else {
-            cart.push({
-                productId: productId,
-                quantity: selectedQty
-            })
-        }
         cart.forEach(item => cartQuantity+= item.quantity)
         quantity.textContent = cartQuantity
 
@@ -82,8 +69,21 @@ addToCart.forEach((addBtn) => {
         timeoutId = setTimeout(() => {
             addedCart.classList.remove('js-added-to-cart')
         }, 1500)
+}
+
+addToCart.forEach((addBtn) => {
+    addBtn.addEventListener('click', () => {
+
+        clearTimeout(timeoutId)
+
+        const { productId } = addBtn.dataset;
+        const select = addBtn.closest('.product-container').querySelector('.js-select-quantity');
+        const addedCart = addBtn.closest('.product-container').querySelector('.added-to-cart')
+        const selectedQty = Number(select.value);
         
-        console.log(cart)
+        handleAddToCart(productId, selectedQty)
+        updateQuantity(addedCart)
+
         })
 })
 
