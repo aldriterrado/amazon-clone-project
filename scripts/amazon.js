@@ -20,14 +20,14 @@ products.forEach((product) => {
             <div class="product-rating-count link-primary">
               ${product.rating.count}
             </div>
-          </div>
+          </div>ß
 
           <div class="product-price">
             $${(product.priceCents / 100).toFixed(2)}
           </div>
 
           <div class="product-quantity-container">
-            <select>
+            <select class="js-select-quantity">
               ${Array.from({ length: 10 }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
             </select>
           </div>
@@ -53,23 +53,26 @@ const quantity = document.querySelector('.js-quantity')
 
 addToCart.forEach((addBtn) => {
     addBtn.addEventListener('click', () => {
-       const productId = addBtn.dataset.productId
-       let cartQuantity = 0;
+        const productId = addBtn.dataset.productId
+        const select = addBtn.closest('.product-container').querySelector('.js-select-quantity');
+        const selectedQty = Number(select.value);
+        let cartQuantity = 0;
 
-       const existingProduct = cart.find(item => item.productId === productId)
+        const existingProduct = cart.find(item => item.productId === productId)
 
-       if(existingProduct){
-        existingProduct.quantity++
-       }else {
-        cart.push({
-            productId: productId,
-            quantity: 1
+        if(existingProduct){
+            existingProduct.quantity += selectedQty
+        }else {
+            cart.push({
+                productId: productId,
+                quantity: selectedQty
+            })
+        }
+        cart.forEach(item => cartQuantity+= item.quantity)
+        quantity.textContent = cartQuantity
+        
+        console.log(cart)
         })
-       }
-       cart.forEach(item => cartQuantity+= item.quantity)
-       quantity.textContent = cartQuantity
-       
-    })
 })
 
 
