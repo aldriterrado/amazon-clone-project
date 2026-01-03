@@ -1,3 +1,5 @@
+import { cart } from '../data/cart.js'
+
 const productsContainer = document.querySelector('.js-products-grid')
 const fragment = document.createDocumentFragment();
 
@@ -50,11 +52,14 @@ productsContainer.appendChild(fragment)
 
 const addToCart = document.querySelectorAll('.js-add-to-cart')
 const quantity = document.querySelector('.js-quantity')
+let timeoutId;
 
 addToCart.forEach((addBtn) => {
     addBtn.addEventListener('click', () => {
-        const productId = addBtn.dataset.productId
+        clearTimeout(timeoutId)
+        const { productId } = addBtn.dataset;
         const select = addBtn.closest('.product-container').querySelector('.js-select-quantity');
+        const addedCart = addBtn.closest('.product-container').querySelector('.added-to-cart')
         const selectedQty = Number(select.value);
         let cartQuantity = 0;
 
@@ -70,6 +75,12 @@ addToCart.forEach((addBtn) => {
         }
         cart.forEach(item => cartQuantity+= item.quantity)
         quantity.textContent = cartQuantity
+
+        addedCart.classList.add('js-added-to-cart')
+
+        timeoutId = setTimeout(() => {
+            addedCart.classList.remove('js-added-to-cart')
+        }, 1500)
         
         console.log(cart)
         })
