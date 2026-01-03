@@ -49,10 +49,12 @@ products.forEach((product) => {
 productsContainer.appendChild(fragment)
 
 const addToCart = document.querySelectorAll('.js-add-to-cart')
+const quantity = document.querySelector('.js-quantity')
 
 addToCart.forEach((addBtn) => {
     addBtn.addEventListener('click', () => {
        const productId = addBtn.dataset.productId
+       let cartQuantity = 0;
 
        const existingProduct = cart.find(item => item.productId === productId)
 
@@ -64,7 +66,9 @@ addToCart.forEach((addBtn) => {
             quantity: 1
         })
        }
-       console.log(cart)
+       cart.forEach(item => cartQuantity+= item.quantity)
+       quantity.textContent = cartQuantity
+       
     })
 })
 
