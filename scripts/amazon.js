@@ -1,4 +1,5 @@
 import { cart } from '../data/cart.js'
+import { products } from '../data/products.js';
 
 const productsContainer = document.querySelector('.js-products-grid')
 const fragment = document.createDocumentFragment();
