@@ -1,4 +1,3 @@
-
 const productsContainer = document.querySelector('.js-products-grid')
 const fragment = document.createDocumentFragment();
 
@@ -40,7 +39,7 @@ products.forEach((product) => {
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id="${product.id}">
             Add to Cart
           </button>
     `
@@ -48,5 +47,25 @@ products.forEach((product) => {
 })
 
 productsContainer.appendChild(fragment)
+
+const addToCart = document.querySelectorAll('.js-add-to-cart')
+
+addToCart.forEach((addBtn) => {
+    addBtn.addEventListener('click', () => {
+       const productId = addBtn.dataset.productId
+
+       const existingProduct = cart.find(item => item.productId === productId)
+
+       if(existingProduct){
+        existingProduct.quantity++
+       }else {
+        cart.push({
+            productId: productId,
+            quantity: 1
+        })
+       }
+       console.log(cart)
+    })
+})
 
 
