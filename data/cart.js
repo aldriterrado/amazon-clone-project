@@ -35,3 +35,11 @@ export const removeFromCart = (productId) => {
     cart = cart.filter(item => item.productId !== productId)
     saveToStorage()
 }
+
+export const updateQuantity = (productId, newQuantity) => {
+    const existingProduct = cart.find(item => item.productId === productId)
+
+    existingProduct.quantity = newQuantity
+
+    saveToStorage()
+}

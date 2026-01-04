@@ -14,6 +14,21 @@
   margin-right: auto;
 }
 
+.quantity-input {
+  width: 30px;
+}
+
+.save-quantity-link,
+.quantity-input {
+  display: none;
+}
+
+.is-editing-quantity {
+  display: initial;
+}
+
+
+
 .page-title {
   font-weight: 700;
   font-size: 22px;
