@@ -1,9 +1,11 @@
 import { cart, handleAddToCart } from '../data/cart.js'
 import { products } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
+import { calculateCartQuantity } from './utils/calculateCartQuantity.js';
 
 const productsContainer = document.querySelector('.js-products-grid')
 const fragment = document.createDocumentFragment();
+
 
 products.forEach((product) => {
     const div = document.createElement('div')
@@ -56,7 +58,7 @@ const addToCart = document.querySelectorAll('.js-add-to-cart')
 const quantity = document.querySelector('.js-quantity')
 let timeoutId;
 
-
+calculateCartQuantity(cart, '.js-quantity')
 
 //Function to update quantity
 const updateQuantity = (addedCart) => {   

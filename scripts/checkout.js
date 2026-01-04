@@ -1,18 +1,13 @@
 import {cart, removeFromCart} from '../data/cart.js'
 import {products} from '../data/products.js' 
 import { formatCurrency } from './utils/money.js'
-
+import { calculateCartQuantity } from './utils/calculateCartQuantity.js'
 
 
 const cartContainer = document.querySelector('.order-summary')
 const fragment = document.createDocumentFragment()
 
-function updateCartQuantity() {
-    const itemLabel = document.querySelector('.js-item-label')
-    const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0)
-
-    itemLabel.textContent = totalItems
-}
+calculateCartQuantity(cart, '.js-item-label')
 
 renderOrderSummary(cart)
 
@@ -105,7 +100,7 @@ function renderOrderSummary(cart)  {
     fragment.appendChild(div)
 })
 cartContainer.appendChild(fragment)
-    updateCartQuantity()
+calculateCartQuantity(cart, '.js-item-label')
 
 }
 
