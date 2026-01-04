@@ -1,17 +1,23 @@
-import {cart} from '../data/cart.js'
+import {cart, removeFromCart} from '../data/cart.js'
 import {products} from '../data/products.js' 
 import { formatCurrency } from './utils/money.js'
+
+
 
 const cartContainer = document.querySelector('.order-summary')
 const fragment = document.createDocumentFragment()
 
+renderOrderSummary(cart)
 
-cart.forEach((item) => {
+function renderOrderSummary(cart)  {
+
+    cart.forEach((item) => {
 
     const {name, image, priceCents} = products.find(p => p.id === item.productId)
 
     const div = document.createElement('div')
     div.className = 'cart-item-container'
+    div.dataset.productId = item.productId
     div.innerHTML = `
         <div class="delivery-date">
               Delivery date: Tuesday, June 21
@@ -35,7 +41,7 @@ cart.forEach((item) => {
                   <span class="update-quantity-link link-primary">
                     Update
                   </span>
-                  <span class="delete-quantity-link link-primary">
+                  <span class="delete-quantity-link link-primary js-delete" data-product-id=${item.productId}>
                     Delete
                   </span>
                 </div>
@@ -89,5 +95,16 @@ cart.forEach((item) => {
     `
     fragment.appendChild(div)
 })
-
 cartContainer.appendChild(fragment)
+
+}
+
+cartContainer.addEventListener('click', (e) => {
+    if(!e.target.dataset.productId) return
+    let productId = e.target.dataset.productId
+
+    if(e.target.classList.contains('js-delete')){
+        removeFromCart(productId)   
+    }
+   
+})
