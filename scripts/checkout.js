@@ -1,12 +1,13 @@
 import {cart} from '../data/cart.js'
 import {products} from '../data/products.js' 
+import { formatCurrency } from './utils/money.js'
 
 const cartContainer = document.querySelector('.order-summary')
 const fragment = document.createDocumentFragment()
 
 
 cart.forEach((item) => {
-    
+
     const {name, image, priceCents} = products.find(p => p.id === item.productId)
 
     const div = document.createElement('div')
@@ -25,7 +26,7 @@ cart.forEach((item) => {
                   ${name}
                 </div>
                 <div class="product-price">
-                  ${(priceCents / 100).toFixed(2)}
+                  ${formatCurrency(priceCents)}
                 </div>
                 <div class="product-quantity">
                   <span>
@@ -47,7 +48,7 @@ cart.forEach((item) => {
                 <div class="delivery-option">
                   <input type="radio" checked
                     class="delivery-option-input"
-                    name="delivery-option-1">
+                    name="delivery-option-${item.productId}">
                   <div>
                     <div class="delivery-option-date">
                       Tuesday, June 21
@@ -60,7 +61,7 @@ cart.forEach((item) => {
                 <div class="delivery-option">
                   <input type="radio"
                     class="delivery-option-input"
-                    name="delivery-option-1">
+                    name="delivery-option-${item.productId}">
                   <div>
                     <div class="delivery-option-date">
                       Wednesday, June 15
@@ -73,7 +74,7 @@ cart.forEach((item) => {
                 <div class="delivery-option">
                   <input type="radio"
                     class="delivery-option-input"
-                    name="delivery-option-1">
+                    name="delivery-option-${item.productId}">
                   <div>
                     <div class="delivery-option-date">
                       Monday, June 13
