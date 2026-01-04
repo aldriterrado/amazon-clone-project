@@ -11,6 +11,8 @@ renderOrderSummary(cart)
 
 function renderOrderSummary(cart)  {
 
+    cartContainer.innerHTML = ''
+
     cart.forEach((item) => {
 
     const {name, image, priceCents} = products.find(p => p.id === item.productId)
@@ -104,7 +106,8 @@ cartContainer.addEventListener('click', (e) => {
     let productId = e.target.dataset.productId
 
     if(e.target.classList.contains('js-delete')){
-        removeFromCart(productId)   
+        removeFromCart(productId)          
+        renderOrderSummary(cart)
     }
    
 })
