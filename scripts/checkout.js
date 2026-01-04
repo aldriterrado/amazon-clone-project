@@ -7,6 +7,13 @@ import { formatCurrency } from './utils/money.js'
 const cartContainer = document.querySelector('.order-summary')
 const fragment = document.createDocumentFragment()
 
+function updateCartQuantity() {
+    const itemLabel = document.querySelector('.js-item-label')
+    const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0)
+
+    itemLabel.textContent = totalItems
+}
+
 renderOrderSummary(cart)
 
 function renderOrderSummary(cart)  {
@@ -98,6 +105,7 @@ function renderOrderSummary(cart)  {
     fragment.appendChild(div)
 })
 cartContainer.appendChild(fragment)
+    updateCartQuantity()
 
 }
 
@@ -108,6 +116,7 @@ cartContainer.addEventListener('click', (e) => {
     if(e.target.classList.contains('js-delete')){
         removeFromCart(productId)          
         renderOrderSummary(cart)
+        updateCartQuantity()
     }
    
 })
