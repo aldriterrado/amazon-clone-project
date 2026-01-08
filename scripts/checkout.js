@@ -2,7 +2,15 @@ import {cart, removeFromCart, updateQuantity} from '../data/cart.js'
 import {products} from '../data/products.js' 
 import { formatCurrency } from './utils/money.js'
 import { calculateCartQuantity } from './utils/calculateCartQuantity.js'
+import { deliveryOptions } from '../data/deliveryOptions.js'
 
+import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
+
+
+const todayDate = dayjs()
+const deliveryDate = todayDate.add(7, 'days')
+
+console.log(deliveryDate.format('dddd, MMMM D'))
 
 const cartContainer = document.querySelector('.order-summary')
 const fragment = document.createDocumentFragment()
@@ -17,14 +25,22 @@ function renderOrderSummary(cart)  {
 
     cart.forEach((item) => {
 
+    const {deliveryDays} = deliveryOptions.find(option => option.id === item.deliveryOptionsId)
+
     const {name, image, priceCents} = products.find(p => p.id === item.productId)
 
+
+    const today = dayjs();
+    const deliveryDate = today.add(deliveryDays, 'days')
+
+    const dateString = deliveryDate.format('dddd, MMMM D')
     const div = document.createElement('div')
+
     div.className = 'cart-item-container'
     div.dataset.productId = item.productId
     div.innerHTML = `
         <div class="delivery-date">
-              Delivery date: Tuesday, June 21
+              Delivery date: ${dateString}
             </div>
 
             <div class="cart-item-details-grid">
@@ -55,49 +71,8 @@ function renderOrderSummary(cart)  {
                 </div>
               </div>
 
-              <div class="delivery-options">
-                <div class="delivery-options-title">
-                  Choose a delivery option:
-                </div>
-                <div class="delivery-option">
-                  <input type="radio" checked
-                    class="delivery-option-input"
-                    name="delivery-option-${item.productId}">
-                  <div>
-                    <div class="delivery-option-date">
-                      Tuesday, June 21
-                    </div>
-                    <div class="delivery-option-price">
-                      FREE Shipping
-                    </div>
-                  </div>
-                </div>
-                <div class="delivery-option">
-                  <input type="radio"
-                    class="delivery-option-input"
-                    name="delivery-option-${item.productId}">
-                  <div>
-                    <div class="delivery-option-date">
-                      Wednesday, June 15
-                    </div>
-                    <div class="delivery-option-price">
-                      $4.99 - Shipping
-                    </div>
-                  </div>
-                </div>
-                <div class="delivery-option">
-                  <input type="radio"
-                    class="delivery-option-input"
-                    name="delivery-option-${item.productId}">
-                  <div>
-                    <div class="delivery-option-date">
-                      Monday, June 13
-                    </div>
-                    <div class="delivery-option-price">
-                      $9.99 - Shipping
-                    </div>
-                  </div>
-                </div>
+              ${deliveryOptionHTML(item.productId,  item.deliveryOptionsId)}
+
               </div>
             </div>
     `
@@ -105,12 +80,54 @@ function renderOrderSummary(cart)  {
 })
 cartContainer.appendChild(fragment)
 calculateCartQuantity(cart, '.js-item-label')
+console.log(cart.deliveryOptionsId)
 
 }
 
+function deliveryOptionHTML(productId, deliveryOptionsId) {
+  // Wrap options in a container so CSS targeting `.delivery-options` applies
+  let optionsHtml = '';
+  deliveryOptions.forEach((option) => {
+    const priceString = option.priceCents === 0 ? 'Free' : formatCurrency(option.priceCents)
+    const today = dayjs();
+    const deliveryDate = today.add(option.deliveryDays, 'days')
+
+    const dateString = deliveryDate.format('dddd, MMMM D')
+    const isChecked = option.id === deliveryOptionsId
+
+    console.log(deliveryOptionsId)
+
+    optionsHtml += `
+      <div class="delivery-option">
+        <input type="radio"
+          ${isChecked ? 'checked' : ''}
+          class="delivery-option-input"
+          name="delivery-option-${productId}">
+        <div>
+          <div class="delivery-option-date">
+            ${dateString}
+          </div>
+          <div class="delivery-option-price">
+            ${priceString} - Shipping
+          </div>
+        </div>
+      </div>
+    `
+  })
+
+  return `
+    <div class="delivery-options">
+      <div class="delivery-options-title">Delivery options</div>
+      ${optionsHtml}
+    </div>
+  `
+}
+
+//Event Deligation instead of using QuerySelectorAll on button
 cartContainer.addEventListener('click', (e) => {
     if(!e.target.dataset.productId) return
     let productId = e.target.dataset.productId
+    
     const productEl = e.target.closest('.cart-item-container')
 
     if(e.target.classList.contains('js-delete')){
