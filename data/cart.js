@@ -46,3 +46,14 @@ export const updateQuantity = (productId, newQuantity) => {
 
     saveToStorage()
 }
+
+export const updateDeliveryOption = (productId, deliveryOptionId) => {
+    const existingProduct = cart.find(item => item.productId === productId)
+
+    if(!existingProduct) return
+
+    // The cart items use `deliveryOptionsId` (plural) — keep the data shape consistent
+    existingProduct.deliveryOptionsId = deliveryOptionId
+
+    saveToStorage()
+}

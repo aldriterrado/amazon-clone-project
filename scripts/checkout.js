@@ -1,4 +1,4 @@
-import {cart, removeFromCart, updateQuantity} from '../data/cart.js'
+import {cart, removeFromCart, updateQuantity, updateDeliveryOption} from '../data/cart.js'
 import {products} from '../data/products.js' 
 import { formatCurrency } from './utils/money.js'
 import { calculateCartQuantity } from './utils/calculateCartQuantity.js'
@@ -80,7 +80,6 @@ function renderOrderSummary(cart)  {
 })
 cartContainer.appendChild(fragment)
 calculateCartQuantity(cart, '.js-item-label')
-console.log(cart.deliveryOptionsId)
 
 }
 
@@ -95,14 +94,13 @@ function deliveryOptionHTML(productId, deliveryOptionsId) {
     const dateString = deliveryDate.format('dddd, MMMM D')
     const isChecked = option.id === deliveryOptionsId
 
-    console.log(deliveryOptionsId)
-
     optionsHtml += `
       <div class="delivery-option">
         <input type="radio"
           ${isChecked ? 'checked' : ''}
           class="delivery-option-input"
-          name="delivery-option-${productId}">
+          name="delivery-option-${productId}"
+          value="${option.id}">
         <div>
           <div class="delivery-option-date">
             ${dateString}
@@ -167,5 +165,20 @@ cartContainer.addEventListener('click', (e) => {
       
     }
 
+    
+
    
+})
+
+
+// Listen for delivery option changes and update cart
+cartContainer.addEventListener('change', (e) => {
+  if (!e.target.classList.contains('delivery-option-input')) return
+  const productEl = e.target.closest('.cart-item-container')
+  if (!productEl) return
+  const productId = productEl.dataset.productId
+  const deliveryOptionId = e.target.value
+
+  updateDeliveryOption(productId, deliveryOptionId)
+  renderOrderSummary(cart)
 })
